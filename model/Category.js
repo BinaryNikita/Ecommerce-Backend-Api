@@ -1,30 +1,30 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../db/dbConfig.js";
+import { DataTypes } from 'sequelize';
+import sequelize from '../db/dbConfig.js';
 
 const Category = sequelize.define(
-  "Category",
+  'Category',
   {
     c_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    c_name: {
+    slug: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    url: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
-    timestamps: false, 
-  },
-
-  sequelize.sync({ force: false }) 
-  .then(() => {
-    console.log('Database & tables created!');
-  })
-  .catch((err) => {
-    console.error('Error syncing database:', err);
-  })
+    timestamps: false,
+  }
 );
 
 export default Category;

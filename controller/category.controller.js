@@ -52,3 +52,12 @@ export const updateCategoryAction = async (request, response, next) => {
     response.send('Error updating category.');
   }
 };
+
+export const bulkAdd = async (request, response, next) => {
+  try {
+    let result = await Category.bulkCreate(request.body);
+    response.send('Data inserted successfully');
+  } catch (err) {
+    response.send('Some error occurred while inserting the data');
+  }
+};

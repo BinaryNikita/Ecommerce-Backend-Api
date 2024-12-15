@@ -9,40 +9,31 @@ const Product = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    p_name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    p_price: {
+
+    stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    quantity: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    warrantyInformation: {
+      type: DataTypes.STRING,
     },
-    category_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Category,
-        key: 'c_id',
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL',
+    shippingInformation: {
+      type: DataTypes.STRING,
+    },
+    availabilityStatus: {
+      type: DataTypes.STRING,
+    },
+    thumbnail: {
+      type: DataTypes.STRING,
     },
   },
   {
     timestamps: false,
-  },
-
-  sequelize
-    .sync({ force: false })
-    .then(() => {
-      console.log('Database & tables created!');
-    })
-    .catch((err) => {
-      console.error('Error syncing database:', err);
-    })
+  }
 );
 
 export default Product;

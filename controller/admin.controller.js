@@ -1,7 +1,5 @@
 import express, { request, response } from 'express';
-import pool from '../db/dbConfig.js';
 import Admin from '../model/Admin.js';
-import User from '../model/SignUp.js';
 import bcrypt from 'bcrypt';
 import {validationResult}from 'express-validator';
 
@@ -38,12 +36,10 @@ export const signOutAction = (request, response) => {
 
 export const signUpAction = async (request, response, next) => {
   let { name, email, password } = request.body;
-  let saltKey = bcrypt.genSaltSync(10);
-  password = bcrypt.hashSync(password, saltKey);
-  request.body.password = password;
+
 const errors = validationResult(request);
 
-if(!error.isEmpty()){
+if(!errors.isEmpty()){
   return response.status(401).json({error: errors.array()});
 }
 
