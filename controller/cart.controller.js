@@ -58,7 +58,7 @@ export const viewCart = async (request, response, next) => {
       }
       const productDetails = result.map((item) => ({
         title: item.Product.title,
-        productId: item.Product.p_id
+        productId: item.Product.p_id,
       }));
 
       return response.json(productDetails);
@@ -71,21 +71,19 @@ export const viewCart = async (request, response, next) => {
 };
 
 export const deleteCartItem = async (request, response, next) => {
-  let adminId = request.param.adminId;
-    let productId = request.params.productId;
+  let adminId = request.params.adminId;
+  let productId = request.params.productId;
 
-    try{
-
-      let cart = await Cart.findOne({ where: { adminId } });
-      let cartId = cart.cart_id;
-
-      
-    } catch(err){
-      response.send(err);
+  try {
+    let cart = await Cart.findOne({ where: { adminId } });
+    let cartId = cart.cart_id;
+    if (cart) {
+        CartItems.destroy({ where: { cartId, productId } });
+      response.send('Item removed from your cart.');
+    } else {
+      request.send("Cart doesn't exist");
     }
-
-
-
-
-
+  } catch (err) {
+    response.send(err);
+  }
 };
