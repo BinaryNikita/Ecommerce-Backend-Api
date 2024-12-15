@@ -1,5 +1,6 @@
 import CartItems from './Cart-items.js';
 import Cart from './Cart.js';
+import sequelize from '../db/dbConfig.js';
 import Category from './Category.js';
 import Product from './Product.js';
 import Admin from './Admin.js';
@@ -30,6 +31,20 @@ Cart.belongsTo(Admin, {
   onUpdate: 'CASCADE'  
 });
 
+
+CartItems.belongsTo(Product, {
+  foreignKey: 'productId',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
+CartItems.belongsTo(Cart, {
+  foreignKey: 'cartId',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
+
 Cart.belongsToMany(Product, { 
   through: CartItems, 
   foreignKey: 'cartId',
@@ -44,4 +59,4 @@ Product.belongsToMany(Cart, {
   onUpdate: 'CASCADE'   
 });
 
-export default { Category, Product, CartItems };
+export { sequelize, Product, Cart, CartItems, Category, Admin };

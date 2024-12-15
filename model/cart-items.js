@@ -1,5 +1,7 @@
 import sequelize from "../db/dbConfig.js";
 import { DataTypes } from "sequelize";
+import Product from "./Product.js";
+import Cart from "./Cart.js";
 
 const CartItems = sequelize.define("CartItems", {
   cartItem_id: {
@@ -11,7 +13,7 @@ const CartItems = sequelize.define("CartItems", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'carts', 
+      model: 'Cart', 
       key: 'cart_id', 
     },
     onDelete: 'CASCADE',
@@ -21,8 +23,8 @@ const CartItems = sequelize.define("CartItems", {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'products', 
-      key: 'id', 
+      model: 'Product', 
+      key: 'p_id', 
     },
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
