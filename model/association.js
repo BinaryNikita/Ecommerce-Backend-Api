@@ -4,6 +4,8 @@ import sequelize from '../db/dbConfig.js';
 import Category from './Category.js';
 import Product from './Product.js';
 import Admin from './Admin.js';
+import Order from './order.js';
+import OrderItems from './order-items.js';
 
 console.log('Association Executed........');
 
@@ -59,4 +61,17 @@ Product.belongsToMany(Cart, {
   onUpdate: 'CASCADE'   
 });
 
-export { sequelize, Product, Cart, CartItems, Category, Admin };
+Order.belongsToMany(Product, {
+  through: 'OrderItems', 
+  foreignKey: 'orderId',
+  otherKey: 'productId',
+});
+Product.belongsToMany(Order, {
+  through: 'OrderItems',
+  foreignKey: 'productId',
+  otherKey: 'orderId',
+});
+
+Admin.hasMany(Order);
+
+export { sequelize, Product, Cart, CartItems, Category, Admin, Order, OrderItems };

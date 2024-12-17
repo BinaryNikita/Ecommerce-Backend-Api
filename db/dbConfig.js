@@ -1,18 +1,18 @@
-import { Sequelize } from "sequelize";
-
-const sequelize = new Sequelize('dummyJson','root','root',
-    {dialect: 'mysql',host: 'localhost', logging: console.log,}
-);
-
-sequelize.authenticate().then(() => {
-    console.log("Connection success");
-}).catch((err) => {
-    console.log(err)
-})
-
-export default sequelize;
+import mongoose from 'mongoose';
 
 
+const connection = async () => {
+    try{
+      await mongoose.connect('mongodb://localhost:27017/Productdb', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+
+      console.log("mongodb connected");
+    }catch(err){
+console.log("Error while connecting to the mongodb: " + err);
+    }
+}
 
 
-
+export default connection;

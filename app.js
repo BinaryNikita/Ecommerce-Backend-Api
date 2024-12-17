@@ -32,11 +32,10 @@ app.use('/admin', AdminRouter);
 app.use('/category', CategoryRouter);
 app.use('/product', ProductRouter);
 app.use('/cart', CartRouter);
-
 sequelize.sync().then(() => {
   console.log("Database synced...");
 }).catch((err) => {
-console.log(err);
+  console.log(err);
 })
 
 app.listen(3002, () => {
