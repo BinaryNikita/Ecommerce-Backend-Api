@@ -1,39 +1,31 @@
 import express, { request, response } from 'express';
 import Product from '../model/Product.js';
-import { where } from 'sequelize';
+
 
 export const viewProduct = async (request, response, next) => {
   try {
-    const products = await Product.findAll();
-    response.json(products);
+    const products = await Product.find();
+    response.json({ product: products });
   } catch (err) {
     console.log(err);
   }
 };
 
 export const addProduct = async (request, response, next) => {
-
-    try {
-      const { title, stock, ...OtherFields} = request.body;
-      const newProduct = await Product.create({ 
-        title,  
-        stock, 
-        ...OtherFields 
-      });
-      response.status(201).json(newProduct);
-      console.log("Item added successfully");
-    } catch (error) {
-      console.log(error);
-      response.status(500).json({ error: 'Failed to create product' });
-    }
-  };
-
-
+  try {
+    const newProduct = await Product.create(request.body);
+    response.status(201).json(newProduct);
+    console.log('Item added successfully');
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: 'Failed to create product' });
+  }
+};
 
 export const deleteProduct = async (request, response, next) => {
-  let p_id = request.params.p_id;
+  let id = request.params.id;
   try {
-    const deleteProduct = await Product.destroy({ where: { p_id } });
+    const deleteProduct = await Product.deleteOne({ id });
     response.json('Product deleted succesfully');
   } catch (err) {
     response.send(err);
@@ -41,22 +33,26 @@ export const deleteProduct = async (request, response, next) => {
 };
 
 export const updateProductAction = async (request, response, next) => {
-  let p_id = request.params.p_id;
+  let id = request.params.id;
   try {
-    const { title, stock, ...OtherFields} = request.body;
-    const updatedProduct = await Product.update({ 
-      title, 
-      stock, 
-      ...OtherFields 
-    }, {where: {p_id}});
+    const { title, stock, ...OtherFields } = request.body;
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: id },
+      {
+        title,
+        stock,
+        ...OtherFields,
+      },
+      {
+        new: true,
+      }
+    );
 
-    if (updatedProduct[0] === 0) {
+    if (!updatedProduct) {
       return response.status(404).json({ error: 'Product not found' });
-    } else{
-      
-          response.status(201).json(updatedProduct);
-          response.send("Item updated successfully");
-
+    } else {
+      response.status(201).json(updatedProduct);
+      response.send('Item updated successfully');
     }
   } catch (error) {
     console.log(error);
@@ -65,11 +61,10 @@ export const updateProductAction = async (request, response, next) => {
 };
 
 export const bulkAdd = async (request, response, next) => {
-
-  try{
-    const result = Product.bulkCreate(request.body.products);
-    response.send("Product created succesfully");
-  } catch(err){
-    response.send("Error while inserting data");
+  try {
+    await Product.insertMany(request.body.products);
+    response.send('Product created succesfully');
+  } catch (err) {
+    response.send('Error while inserting data');
   }
-}
+};

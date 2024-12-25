@@ -1,38 +1,25 @@
-import sequelize from "../db/dbConfig.js";
-import { DataTypes } from "sequelize";
-import Product from "./Product.js";
-import Cart from "./Cart.js";
+import mongoose from 'mongoose';
+import Product from './Product.js';
+import Cart from './Cart.js';
 
-const CartItems = sequelize.define("CartItems", {
-  cartItem_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  cartId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'Cart', 
-      key: 'cart_id', 
+const cartItemSchema = new mongoose.Schema(
+  {
+    cartId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Cart',
+      required: true,
     },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  },
-  productId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'Product', 
-      key: 'p_id', 
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
     },
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
+    quantity: { type: Number, default: 1 },
+    price: { type: Number, required: true },
   },
-});
+  { timestamps: true }
+);
 
-
-
-
+const CartItems = mongoose.model('CartItems', cartItemSchema);
 
 export default CartItems;

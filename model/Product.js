@@ -1,44 +1,30 @@
-import { DataTypes } from 'sequelize';
-import sequelize from '../db/dbConfig.js';
+import mongoose from 'mongoose';
 import Category from './Category.js';
-const Product = sequelize.define(
-  'Product',
+
+const productSchema = new mongoose.Schema(
   {
-    p_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-
-    price: {
-      type: DataTypes.DECIMAL,
-      allowNull:false
-    },
-
-    stock: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    warrantyInformation: {
-      type: DataTypes.STRING,
-    },
-    shippingInformation: {
-      type: DataTypes.STRING,
-    },
-    availabilityStatus: {
-      type: DataTypes.STRING,
-    },
-    thumbnail: {
-      type: DataTypes.STRING,
+    title: { type: String },
+    price: { type: mongoose.Schema.Types.Decimal128 },
+    stock: { type: Number, min: 0 },
+    reviews: [
+      {
+        rating: { type: Number },
+        comment: { type: String },
+      },
+    ],
+    warrantyInformation: { type: String },
+    shippingInformation: { type: String },
+    availabilityStatus: { type: String, default: 'In Stock' },
+    thumbnail: { type: String, default: 'default-thumbnail.jpg' },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true,
     },
   },
-  {
-    timestamps: false,
-  }
+  { timestamps: true }
 );
+
+const Product = mongoose.model('Product', productSchema);
 
 export default Product;

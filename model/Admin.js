@@ -1,30 +1,24 @@
-import sequelize from "../db/dbConfig.js";
-import { DataTypes } from "sequelize";
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
- const Admin = sequelize.define('Admin',  {
-    user_id : {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-    },
+ const adminSchema = mongoose.Schema( {
+   
 
-    name: {type: DataTypes.STRING },
-    email: {type: DataTypes.STRING, unique:true},
-    password: {type: DataTypes.STRING,
-      set(v){
+    name: {type: String,  },
+    email: {type: String, unique:true, required:true},
+    password: {type: String
+      , set(v){
         const saltKey = bcrypt.genSaltSync(10);
         const hashedpassword = bcrypt.hashSync(v, saltKey);
-         this.setDataValue('password', hashedpassword);
+        return hashedpassword;
       }
     }
 },
-{
-    timestamps: false,
-},
+
 
 );
 
+const Admin = mongoose.model('Admin',adminSchema);
 
 export default Admin;
 

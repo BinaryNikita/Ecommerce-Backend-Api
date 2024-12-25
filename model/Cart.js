@@ -1,13 +1,16 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../db/dbConfig.js";
+import mongoose from 'mongoose';
 
-const Cart = sequelize.define("cart",{
-    cart_id:{
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    }
-});
+const cartSchema = new mongoose.Schema(
+  {
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Admin',
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
+const Cart = mongoose.model('Cart', cartSchema);
 
 export default Cart;

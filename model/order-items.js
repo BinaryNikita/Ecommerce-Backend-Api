@@ -1,37 +1,26 @@
-import sequelize from "../db/dbConfig.js";
-import { DataTypes } from "sequelize";
-import Order from "./order.js";
-import Product from "./Product.js";
+import mongoose from 'mongoose';
+import Product from './Product.js';
+import Order from './Order.js';
 
-const OrderItems = sequelize.define('OrderItems', {
+const orderItemSchema = new mongoose.Schema(
+  {
     orderId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Order,
-        key: 'order_id',
-      },
-      onDelete: 'CASCADE',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order',
+      required: true,
     },
     productId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Product,
-        key: 'p_id',
-      },
-      onDelete: 'CASCADE',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
     },
-    quantity: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 1,
-    },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-  });
+    quantity: { type: Number, default: 1, required: true },
+    price: { type: mongoose.Schema.Types.Decimal128, required: true },
+  },
+  { timestamps: true }
+);
 
- 
-  
-  export default OrderItems;
-  
+const OrderItems = mongoose.model('OrderItems', orderItemSchema);
+console.log(orderItemSchema);
+
+export default OrderItems;

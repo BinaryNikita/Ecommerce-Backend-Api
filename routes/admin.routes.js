@@ -1,15 +1,10 @@
 import express from "express";
 import { body } from 'express-validator';
-
-import {signInAction, signOutAction } from "../controller/admin.controller.js";
+import {signInAction} from "../controller/admin.controller.js";
 import {signUpAction } from "../controller/admin.controller.js";
-import {isLoggedIn} from "../middleware/auth.js"
 const router = express.Router();
 
-
-router.get("/sign-out", signOutAction);
 router.post("/sign-in",signInAction);
-
 router.post("/sign-up", body("name","name is required").notEmpty(),
 body("email","email id is required").notEmpty(),
 body("email","Not a valid email id").isEmail(),

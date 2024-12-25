@@ -1,24 +1,18 @@
-import sequelize from "../db/dbConfig.js";
-import { DataTypes } from "sequelize";
+import mongoose from 'mongoose';
 
-const Order = sequelize.define('Order', {
-   
-    order_id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+const orderSchema = new mongoose.Schema(
+  {
+    orderStatus: { type: String, default: 'pending', required: true },
+    totalAmount: { type: mongoose.Schema.Types.Decimal128, required: true },
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Admin',
+      required: true,
     },
-      orderStatus: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'pending', 
-      },
-      totalAmount: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-      },
-    
- 
-});
+  },
+  { timestamps: true }
+);
+
+const Order = mongoose.model('Order', orderSchema);
 
 export default Order;

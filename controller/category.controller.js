@@ -1,63 +1,64 @@
-import express, { request, response } from 'express';
-import pool from '../db/dbConfig.js';
 import Category from '../model/Category.js';
 
 export const viewCategory = async (request, response, next) => {
   try {
-    const categories = await Category.findAll();
-    response.send(categories);
+    const categories = await Category.find();
+    response.json(categories);
   } catch (err) {
-    response.send(err);
+    response.status(500).send('Error fetching categories');
   }
 };
 
 export const addCategory = async (request, response, next) => {
-  const { c_name } = request.body;
-
   try {
-    await Category.create({ c_name: c_name });
-    response.send('category created succesfully');
+    await Category.create(request.body);
+    response.send('Category created successfully');
   } catch (err) {
     console.error(err);
+    response.status(500).send('Error creating category');
   }
 };
 
 export const deleteCategory = async (request, response, next) => {
-  const c_name = request.params.c_name;
+  const id = request.params;
 
   try {
-    await Category.destroy({ where: { c_name } });
-    response.send('category deleted sucessfully');
+    await Category.deleteOne({  _id: id });
+    response.send('Category deleted successfully');
   } catch (err) {
     console.error(err);
+    response.status(500).send('Error deleting category');
   }
 };
 
 export const updateCategoryAction = async (request, response, next) => {
-  const c_name = request.params.c_name;
-  const updatedc_name = request.body.updatedc_name;
+  const  id  = request.params.id;
+  const { updatedc_name } = request.body;
 
   try {
-    let result = await Category.update(
-      { c_name: updatedc_name },
-      { where: { c_name: c_name } }
+    const updatedCategory = await Category.findOneAndUpdate(
+      { _id: id },
+      { name: updatedc_name },
+      { new: true }
     );
 
-    if (result[0] == 0) {
-      response.send('category not found');
+    if (!updatedCategory) {
+      return response.status(404).send('Category not found');
     }
+
     response.send('Category updated successfully');
   } catch (err) {
     console.error(err);
-    response.send('Error updating category.');
+    response.status(500).send('Error updating category');
   }
 };
 
 export const bulkAdd = async (request, response, next) => {
   try {
-    let result = await Category.bulkCreate(request.body);
+    await Category.insertMany(request.body);
     response.send('Data inserted successfully');
   } catch (err) {
-    response.send('Some error occurred while inserting the data');
+    response.status(500).send('Error while inserting data');
   }
 };
+
